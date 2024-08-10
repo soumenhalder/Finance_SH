@@ -5,8 +5,8 @@ class Node:
         self.probability = probability
         self.time = time
         self.option_price = option_price
-        self.up = None  # Link to the node in the next step (up move)
-        self.down = None  # Link to the node in the next step (down move)
+        self.up = None
+        self.down = None
         self.parent= parent
 
 class BinomialTree:
@@ -18,11 +18,15 @@ class BinomialTree:
         initial_price: in any currency say $.
         interest_rate: continuous interest rate in percent
         total_time   : total time considered (T) in year
+        steps        : the steps considered
         up_factor    : u, the upward movement from current stock price S0 to uS0
         down_factor  : d, the downward movement from current stock price S0 to dS0
-        steps        : the steps considered
-        divident_rate: divident from the stock in percent
+        strike_price : strike Price of option (call/put) in $,
+        divident_rate: continuous divident from the stock in percent
         volatality   : volatality in percent
+        option_type  : call/ put option
+        option_maturity_type: American/Euripean option type
+        debug: Debug mode will show up_probability, to cross check
         """
 
         self.time_step = total_time/steps
@@ -88,8 +92,9 @@ class BinomialTree:
                        (1/self.discount_factor ) *
                         (self.probability_up * parent.up.option_price + (1 - self.probability_up) * parent.down.option_price)
                     )
+                    spot_option_price = self.calculate_option_value(parent.price)
                     if (self.option_maturity_type == "American" and self.option_type == 'put') :
-                        parent.option_price = max(option_price,  self.calculate_option_value(parent.price))
+                        parent.option_price =  max(spot_option_price,option_price)
                     else: 
                         parent.option_price = option_price
                     self.calculate_option_value(node.price)
@@ -103,7 +108,6 @@ class BinomialTree:
         levels = []
         current_level = [self.root]
         while current_level:
-            #levels.append([node.price for node in current_level])
             levels.append([[node.price, node.time, node.option_price] for node in current_level])
             next_level = []
             for node in current_level:
@@ -117,22 +121,33 @@ import networkx as nx
 
 def visualize_binomial_tree(tree):
     levels = tree.get_tree_levels()
-    print(levels[0])
+    print(f"Option price at present {round(levels[0][0][2],3)}$")
     #print(levels)
     G = nx.Graph()
     
     pos = {}
     for i, level in enumerate(levels):
-        for j, property in enumerate(reversed(level)):
-            price=property[0]
-            time=property[1]
-            option_price = property[2]
-            node_id = f"{i}-{j}"
-            G.add_node(node_id, price=price, time=time, option_price=option_price)
-            pos[node_id] = (i, - (2**(i-1)+ 1)/ 2  +j)
-            if i > 0:
-                parent_id = f"{i-1}-{j//2}"
-                G.add_edge(parent_id, node_id)
+        pricelist = []
+        s = 0
+        for property in reversed(level):
+            price=round(property[0], max(i,5))
+            if price not in pricelist:
+                time=property[1]
+                pricelist.append(price)
+                option_price = property[2]
+                node_id = f"{i}:{-i+2 * s}"
+                G.add_node(node_id, price=price, time=time, option_price=option_price)
+                pos[node_id] = (i, -i+ 2* s)
+                if i > 0:
+                    if s > 0:
+                        parent_id = f"{i-1}:{-i+2*s-1}"
+                        G.add_edge(parent_id, node_id)
+                    if s < i:
+                        parent_id = f"{i-1}:{-i+2*s+1}"
+                        G.add_edge(parent_id, node_id)
+
+                s = s+1
     labels = {node: f'S={data["price"]:.2f}$ \n t = {data["time"]:.4f}y \n f ={data["option_price"]:.4f}$' for node, data in G.nodes(data=True)}
     nx.draw(G, pos, labels=labels, with_labels=True, node_size=5000, node_color='skyblue', font_size=10, node_shape='s')
+    plt.subplots_adjust(right=0.9, left=0.1)
     plt.show()
