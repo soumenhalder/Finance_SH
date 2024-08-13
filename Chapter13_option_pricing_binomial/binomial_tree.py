@@ -94,6 +94,7 @@ class BinomialTree:
                     )
                     spot_option_price = self.calculate_option_value(parent.price)
                     if (self.option_maturity_type == "American" and self.option_type == 'put') :
+                        #NOTE need to look back, 
                         parent.option_price =  max(spot_option_price,option_price)
                     else: 
                         parent.option_price = option_price
@@ -119,16 +120,19 @@ class BinomialTree:
 import matplotlib.pyplot as plt # type: ignore
 import networkx as nx
 
-def visualize_binomial_tree(tree):
+def visualize_binomial_tree(tree, hedging=False):
     levels = tree.get_tree_levels()
     print(f"Option price at present {round(levels[0][0][2],3)}$")
     #print(levels)
     G = nx.Graph()
+    H = nx.Graph()
     
     pos = {}
     for i, level in enumerate(levels):
         pricelist = []
         s = 0
+        last_option_price = 0
+        last_price = 0
         for property in reversed(level):
             price=round(property[0], max(i,5))
             if price not in pricelist:
@@ -138,16 +142,24 @@ def visualize_binomial_tree(tree):
                 node_id = f"{i}:{-i+2 * s}"
                 G.add_node(node_id, price=price, time=time, option_price=option_price)
                 pos[node_id] = (i, -i+ 2* s)
+                Delta = (last_option_price-option_price)/(last_price-price)
                 if i > 0:
                     if s > 0:
                         parent_id = f"{i-1}:{-i+2*s-1}"
                         G.add_edge(parent_id, node_id)
+                        deltaNodeId = f"{round(last_option_price,2)}-{round(option_price,2)}/{round(last_price,2)}-{round(price,2)}"
+                        pos[deltaNodeId] = (i,-i+ 2 * s - 1)
+                        H.add_node(deltaNodeId, Delta = Delta)
                     if s < i:
                         parent_id = f"{i-1}:{-i+2*s+1}"
                         G.add_edge(parent_id, node_id)
-
+                last_option_price = option_price
+                last_price = price
                 s = s+1
     labels = {node: f'S={data["price"]:.2f}$ \n t = {data["time"]:.4f}y \n f ={data["option_price"]:.4f}$' for node, data in G.nodes(data=True)}
     nx.draw(G, pos, labels=labels, with_labels=True, node_size=5000, node_color='skyblue', font_size=10, node_shape='s')
+    if hedging:
+        labels_delta = {node: f'$\Delta$={data["Delta"]:.4f}' for node, data in H.nodes(data=True)}
+        nx.draw(H, pos, labels=labels_delta, with_labels=True, node_size=4000, node_color='white', font_size=10, node_shape='o')
     plt.subplots_adjust(right=0.9, left=0.1)
     plt.show()
