@@ -61,7 +61,7 @@ $$\frac{d S_t} {S_t} = \mu dt + \sigma dW_t$$
 The distribution of $dS_t$ is a normal distribution $\mathcal{N}(\mu dt, \sigma^2 dt)$ as the first component gives deterministic drift and the second component is a random noise with zero mean, of variance $\sigma^2 dt$. Now let's try to digrace this. What does it mean in real life.
 
 - Suppose you have a price (time) series
-  $S_t = \{1.20, 1.32, 1.94, 1.50, 1.76.....\}$. The equation is saying if we plot the $d\log{S_T}$ **then that will be a normal distrbution**.
+  $S_t = \{1.20, 1.32, 1.94, 1.50, 1.76, \}$. The equation is saying if we plot the $d\log{S_T}$ **then that will be a normal distrbution**.
 
 | $T$    | $S_T$ | $dS_T$ |
 | ------ | ----- | ------ |
@@ -120,16 +120,16 @@ Notice,
 
 - According to defition normalized brownian motion's variance $\text{Var}(W_t) = t$. The behaviour is same as discrete one. Since this depend on time, it's not-stationary process.
 - As an example we can consider price series, and if we are to make a histogram of the log(price) series it will not give you a normal distribution.
-  $$E[\log S_t] = \log S_0 + (\mu -\sigma^2/2) t = \Mu_t$$
+  $$E[\log S_t] = \log S_0 + (\mu -\sigma^2/2) t = M_t$$
   $$\text{Var}[\log S_t] = \sigma^2 t = \Sigma_t$$
 
-* Suppose $\mathcal{N}(\Mu_{t_0}, \Sigma_{t_0}) = f(t_0)$ is a random variable then So for a price series, the mean and variance depends on $\Delta t = t_0$ and $T$
+* Suppose $\mathcal{N}(M_{t_0}, \Sigma_{t_0}) = f(t_0)$ is a random variable then So for a price series, the mean and variance depends on $\Delta t = t_0$ and $T$
 
-$$\log S_t = \{ f(t_0), f(2t_0), f(3t_0), f(4t_0), f(5t_0), f(6t_0).... f(T)\}$$
+$$\log S_t = \{ f(t_0), f(2t_0), f(3t_0), f(4t_0), f(5t_0), f(6t_0)... f(T)\}$$
 
 - But for $dW_t$, all are i.i.d. and hence it will give fixed variance, does not depend on $T$
 
-$$\log (S_t/S_0) = \{ f(t_0), f(t_0), f(t_0), f(t_0), f(t_0), f(t_0).... f(t_0)\}$$
+$$\log (S_t/S_0) = \{ f(t_0), f(t_0), f(t_0), f(t_0), f(t_0), f(t_0)... f(t_0)\}$$
 
 ## Cointegration and statistical arbitrage spread
 

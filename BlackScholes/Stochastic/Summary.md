@@ -110,11 +110,11 @@ We observe log-price and log-return distributions for:
 
   $$
   \text{where } f(t)
-  \sim \mathcal{N}(\mu_t \log S_0 + (\mu -\sigma^2/2) t , \sigma_t^2=\sigma^2 t)
+  \sim \mathcal{N}(M_t , \Sigma_t^2)
   $$
 
-  $$E[\log S_t] = \log S_0 + (\mu -\sigma^2/2) t = \Mu_t$$
-  $$\text{Var}[\log S_t] = \sigma^2 t = \Sigma_t$$
+  $$E[\log S_t] = \log S_0 + (\mu -\sigma^2/2) t = M_t$$
+  $$\text{Var}[\log S_t] = \sigma^2 t = \Sigma^2_t$$
 
   This means that the **mean and variance depend on both** the timeframe $\Delta t = t_0$ and the **total time** $T$.
 
@@ -130,18 +130,6 @@ This shows:
 
 - **Log-prices** evolve over time and are **non-stationary** (variance increases with $T$),
 - **Log-returns** are **stationary**—their distribution depends on $\Delta t$, but **not** on $T$.
-
-## **4. Stationarity of Log-Returns**
-
-- Log-return $d \log S_t$ follows $\mathcal{N}(\mu t_0, \sigma^2 t_0)$ for time frame $\Delta t = t_0$.
-- The **mean** and **variance** are time-independent, hence the process is **covariance stationary**.
-- Even though returns scale with $\Delta t$, they do **not** depend on absolute time $T$.
-- The scaling of volatility follows: $\sigma\_{\Delta t} \propto \sqrt{\Delta t}$.
-
-> **Clarification**:
->
-> - Stationarity implies that properties do not evolve with time.
-> - Timeframe $\Delta t$ determines variance, not the dataset duration $T$.
 
 ---
 
