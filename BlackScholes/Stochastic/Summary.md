@@ -200,3 +200,75 @@ So, log-prices evolve with time. But **log-returns**, defined over fixed $\Delta
 - **No.**
 - Here, the $I(0)$ process is **constructed** via linear combination, not by differencing.
 - Therefore, its distribution is independent of $\Delta t$ (unlike log-return, which depends on $\Delta t$).
+
+Here’s a polished, elegant, and LaTeX-consistent version of your draft with clearer structure, smoother phrasing, and enhanced formatting:
+
+---
+
+## Random Walk vs AR(1) Process
+
+We consider the first-order autoregressive (AR(1)) model:
+
+$$
+X_t = \phi X_{t-1} + \epsilon_t
+$$
+
+where $\epsilon_t$ is white noise with mean zero and variance $\sigma^2$. The explicit solution is:
+
+$$
+X_t = \sum_{k = 0}^{t-1} \phi^k \epsilon_{t - k}
+$$
+
+### Stationary Case: $|\phi| < 1$
+
+- The process becomes **weakly stationary** (i.e., ARIMA(1,0,0)) when the characteristic root satisfies $|\phi| < 1$, or equivalently, $1/\phi > 1$.
+- For a stationary process, the mean and variance are time-independent. Taking variance on both sides:
+
+$$
+\text{Var}(X_t) = \phi^2 \text{Var}(X_{t-1}) + \text{Var}(\epsilon_t)
+\Rightarrow \text{Var}(X_t) = \frac{\sigma^2}{1 - \phi^2}
+$$
+
+### Unit Root Case: $\phi = 1$
+
+- This corresponds to a **random walk** (i.e., ARIMA(1,1,0)):
+
+$$
+X_t = \sum_{i=1}^{t} \epsilon_i
+$$
+
+- The variance grows linearly with time: $\text{Var}(X_t) = t\sigma^2$, and the process is **non-stationary**.
+
+### Explosive Case: $|\phi| > 1$
+
+- The process becomes **non-stationary and explosive**:
+
+$$
+X_t = \phi^t X_0 + \sum_{k=0}^{t-1} \phi^k \epsilon_{t - k}
+$$
+
+- Both mean and variance diverge exponentially over time.
+
+---
+
+## White Noise vs Other Stationary Processes
+
+### White Noise
+
+- A **white noise** process $\epsilon_t$ is stationary with zero autocorrelation:
+
+$$
+\text{Cov}(\epsilon_t, \epsilon_s) = \sigma^2 \delta_{t,s}
+$$
+
+- Each $\epsilon_t$ is independent and identically distributed (i.i.d.).
+
+### AR(1) Process
+
+- The AR(1) process is also stationary for $|\phi| < 1$, but exhibits **non-zero autocorrelation**:
+
+$$
+\text{Cov}(X_t, X_{t-s}) = \frac{\sigma^2 \phi^s}{1 - \phi^2}
+$$
+
+- The autocorrelation decays **geometrically** with lag $s$, a key distinguishing feature from white noise.

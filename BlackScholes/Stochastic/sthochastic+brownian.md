@@ -140,3 +140,18 @@ Suppose two $I(1)$ series $X_t, Y_t$ are cointegrated, hence there exist a linea
 - **NO**
 - Because in earlier case we made $I(1)$ series out of $I(0)$ series by taking the first difference. That caused the difference timeframe $\Delta t$, as important parameter, deciding the width of the $I(0)$ series.
 - But here $\Delta t$ has no role, by construction the spread is an $I(0)$ process.
+
+## Random walk vs AR(1)
+
+$$X_t = \phi X_{t-1} + \epsilon_t$$
+$$X_t =  \sum_{k = 0}^{t-1} \phi^{k}\epsilon_{t-k}$$
+
+- Become stationary process (ARIMA(1,0,0)) charecteristic root $1/\phi > 1 \Rightarrow \phi < 1$.We can use earlier expression to calculate mean and variance but for stationary process, we know mean and variance is independent of time, which imply $\text{Var}(X_t) = \text{Var}(X_{t-1})$. So $\text{Var}(X_t) = \phi^2 \text{Var}(X_{t-1}) + \text{Var}(\epsilon_t) \Rightarrow \text{Var}(X_t) = \frac{\sigma^2}{1-\phi^2}$
+
+- For $\phi = 1$ it is a random walk (ARIMA(1, 1, 0)). $X_t = \sum_{i = 1}^{t} \epsilon_t$
+- For $\phi>1$ it is a non-stationary process. $X_t = \phi^t + \epsilon_t$, both mean and sigma diverge with time.
+
+## White noise vs other stationary process
+
+- White noise are those stationary process whose auto-correlation is zero, that is $\text{Cov}(\epsilon_t, \epsilon_s) = \sigma^2\delta_{t,s}$.
+- Where as for simple AR(1) process $X_t = \phi X_{t-1} + \epsilon_t$, $\text{Cov}(X_t, X_{t-s})=\frac{\sigma^{2} \phi^s}{1-\phi^2}$
